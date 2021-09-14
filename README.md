@@ -186,3 +186,114 @@ Run ' ansible all -m ping ' again.
 - Run the playbook
 
 	ansible-playbook nginx_playbook.yml
+
+
+# How to use Ansible on hybrid configuration?
+## Launching an EC2 instance on AWS using Ansible playbook
+
+### Step 1: Install the following dependencies
+
+- Python 3 and above
+- Boto3
+- pip3
+
+Run these commands, either one by one or from a script:
+
+	
+	sudo apt install python
+        alias python=python3
+	sudo apt install python-pip
+	sudo pip install --upgrade pip
+	sudo pip install boto boto3
+
+### Step 2: set up Ansible Vault
+
+
+### Step 3: make sure all keys are available
+Copy the pem file into Ansible controller to SSH into the EC2 instance
+
+
+We need to install some dependencies:
+
+- AWS keys
+- sre_key.pem
+- sre_key and sre_key.pub
+- ansible vault configuration
+- an aws account
+- iam role with access to EC2
+
+Step 4: Playbook
+
+```
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: True
+  become: True
+  vars:
+   key_name: sre_key
+   region: eu-west-1
+   image: ami-0943382e114f188e8
+   id: SRE ioana Ansible EC2
+   sec_group: sg-0373f88dbd1c68d3e
+   subnet_id: subnet-0429d69d55dfad9d2
+
+   ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+   - name: Facts
+     block:
+
+     - name: Get instance facts
+       ec2_instance_facts:
+         aws_access_key: "{{aws_access_key}}"
+         aws_secret_key: "{{aws_secret_key}}"
+         region: "{{ region }}"
+       register: result
+
+   - name: Provisioning EC2 instances
+     block:
+
+     - name: Upload public key to AWS
+       ec2_key:
+         name: "{{key_name}}"
+         key_material: "{{lookup('file', '~/.ssh/{{key_name}}.pub') }}"
+         region: "{{ region }}"
+         aws_access_key: "{{aws_access_key}}"
+         aws_secret_key: "{{aws_secret_key}}"
+
+     - name: Provision instance(s)
+       ec2:
+         aws_access_key: "{{aws_access_key}}"
+         aws_secret_key: "{{aws_secret_key}}"
+         assign_public_ip: true
+         key_name: "{{key_name}}"
+         id: "{{ id }}"
+         vpc_subnet_id: "{{ subnet_id }}"
+         group_id: "{{ sec_group }}"
+         image: "{{ image }}"
+         instance_type: t2.micro
+         region: "{{ region }}"
+         wait: true
+         count: 1
+         instance_tags:
+           Name: sre_ioana_ansible_ec2
+
+      tags: ['never', 'create_ec2']
+
+```
+
+
+
+Create an EC2 instance in Ansible controller
+
+- ami
+- type of instance: t2micro
+- vpc id
+- subnet id
+- SG id
+- key_name
+- public ip
+
+
