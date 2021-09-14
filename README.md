@@ -17,8 +17,8 @@ Note: Ansible can be used for on premise, hybrid or cloud configurations
 ## What is Infrastructure as Code (IaC)?
 IaC manages and provisions the infrastructure through code instead of manual processes. This makes it easier to edit and distribute configurations.
 IaC has two parts:
-1. Configuration Management (Ansible, Puppet, CHEF)
-2. Orchestration (Ansible, Terraform, Kubernetes)
+1. Configuration Management (Ansible, Puppet, CHEF): track and control the changes in a software
+2. Orchestration (Ansible, Terraform, Kubernetes): same but automated
 
 ### Push-Pull configuration
 The tools that work with IaC have either push or pull configuration. The main difference is the manner in which the servers are told how to be configured. In the pull method the server to be configured will pull its configuration from the controlling server. In the push method the controlling server pushes the configuration to the destination system.
@@ -155,3 +155,34 @@ In ansible configuration directory we need to edit the hosts file by adding our 
 - for db: 192.168.33.11 ansible_connection=ssh ansible_user=vagrant ansible_ssh_pass=vagrant
 
 Run ' ansible all -m ping ' again.
+
+## Installing nginx using a playbook in Ansible
+
+- create the nginx playbook 
+	
+	sudo nano nginx_playbook.yml
+
+- it needs to contain:
+
+	# Create a playbook to install nginx web server on web machine
+	# web 192.168.33.10
+	# Lets add 3 dashes to start the YAML
+	---
+	# add the name of the host
+	- hosts: web
+
+	# gather facts about the installation steps
+	gather_facts: yes
+
+	# we need admin access 
+	become: true
+
+	# add instructions to install nginx on web machine
+	tasks:
+	- name: Install Nginx
+	  apt: pkg=nginx state=present
+
+
+- Run the playbook
+
+	ansible-playbook nginx_playbook.yml
