@@ -23,7 +23,7 @@ IaC has two parts:
 ### Push-Pull configuration
 The tools that work with IaC have either push or pull configuration. The main difference is the manner in which the servers are told how to be configured. In the pull method the server to be configured will pull its configuration from the controlling server. In the push method the controlling server pushes the configuration to the destination system.
 
-![alt text]()
+![alt text](https://github.com/ioanan11/sre_iac_ansible/blob/main/Screenshot%202021-09-14%20082531.png)
 
 ### Yet Another Markup Language (YAML)
 YAML is a data serialization language that is often used for writing configuration files. Depending on whom you ask, YAML stands for yet another markup language or YAML ain’t markup language (a recursive acronym), which emphasizes that YAML is for data, not documents. 
@@ -53,7 +53,7 @@ Example:
 
 # How to use Ansible on prem?
 
-![alt text]()
+![alt text](https://github.com/ioanan11/sre_iac_ansible/blob/main/Screenshot%202021-09-14%20075300.png)
 
 ## Step 1: Vagrantfile Configuration
 We need to configure 3 different Vagrant Machines. In our example, we will use Web (which will contain node app), db (database running on MongoDB) and Controller (Ansible controller). 
