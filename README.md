@@ -164,20 +164,20 @@ Run ' ansible all -m ping ' again.
 
 - it needs to contain:
 
-	# Create a playbook to install nginx web server on web machine
-	# web 192.168.33.10
-	# Lets add 3 dashes to start the YAML
+	#Create a playbook to install nginx web server on web machine
+	#web 192.168.33.10
+	#Lets add 3 dashes to start the YAML
 	---
-	# add the name of the host
+	#add the name of the host
 	- hosts: web
 
-	# gather facts about the installation steps
+	#gather facts about the installation steps
 	gather_facts: yes
 
-	# we need admin access 
+	#we need admin access 
 	become: true
 
-	# add instructions to install nginx on web machine
+	#add instructions to install nginx on web machine
 	tasks:
 	- name: Install Nginx
 	  apt: pkg=nginx state=present
